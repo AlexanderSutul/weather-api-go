@@ -4,37 +4,32 @@ import (
 	"net/http"
 	"weather-api-go/models"
 	"weather-api-go/services"
-	"weather-api-go/utils"
 )
 
 func Weather(w http.ResponseWriter, req *http.Request) {
-	lat := req.URL.Query().Get("lat")
+	queries := req.URL.Query()
+	lat := queries.Get("lat")
+	resp := &models.Response{}
 	if lat == "" {
-		utils.SendResponse(w, http.StatusBadRequest, &models.Response{
-			Error: "lat is not provided as query parameter",
-		})
+		resp.Error = "lat is not provided as query parameter"
+		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
-	lon := req.URL.Query().Get("lon")
+	lon := queries.Get("lon")
 	if lon == "" {
-		utils.SendResponse(w, http.StatusBadRequest, &models.Response{
-			Error: "lon is not provided as query parameter",
-		})
+		resp.Error = "lon is not provided as query parameter"
+		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
 	weatherApiResponse, err := services.WeatherService.GetWeaterExternalApi(lat, lon)
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, &models.Response{
-			Error: err.Error(),
-		})
+		resp.Error = err.Error()
+		resp.SendResponse(w, http.StatusInternalServerError)
 		return
 	}
 
-	weatherResponse := models.InitWeatherResponse(weatherApiResponse)
-
-	utils.SendResponse(w, http.StatusOK, &models.Response{
-		Data: weatherResponse,
-	})
+	resp.Data = models.InitWeatherResponse(weatherApiResponse)
+	resp.SendResponse(w, http.StatusOK)
 }

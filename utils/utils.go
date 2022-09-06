@@ -1,21 +1,22 @@
 package utils
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"weather-api-go/models"
+	"time"
 )
 
-func SendResponse(w http.ResponseWriter, responseCode int, response *models.Response) {
-	buffer, err := json.Marshal(response)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response.Error = "cannot parse response model"
-		fmt.Fprintln(w, response)
-		return
+func ShowUptimeMessage() {
+	start := time.Now()
+	ticker := time.NewTicker(1 * time.Second)
+
+	for range ticker.C {
+		fmt.Printf("Current seconds uptime: %.0f\n", time.Since(start).Seconds())
 	}
 
-	w.WriteHeader(responseCode)
-	fmt.Fprintln(w, string(buffer))
+	fmt.Println("no more messages will be displayed")
+}
+
+func GetTime(original int64) string {
+	tm := time.Unix(original, 0)
+	return tm.UTC().String()
 }

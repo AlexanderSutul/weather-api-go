@@ -22,13 +22,13 @@ func (ws *weatherService) GetWeaterExternalApi(lat, lon string) (*models.Weather
 		lon,
 		ws.Token,
 	)
-	resp, err := http.Get(url)
+	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

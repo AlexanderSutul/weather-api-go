@@ -1,8 +1,6 @@
 package models
 
-import (
-	"time"
-)
+import "weather-api-go/utils"
 
 type WeatherApiResponseCoordinates struct {
 	Latitude  float32 `json:"lat"`
@@ -57,16 +55,7 @@ func InitWeatherResponse(war *WeatherApiResponse) *WeatherResponse {
 		Temperature: war.Main.Temperature,
 		City:        war.Name,
 		Country:     war.Sys.Country,
-		SunsetTime:  a.getTime(war.Sys.Sunset),
-		SunriseTime: a.getTime(war.Sys.Sunrise),
+		SunsetTime:  utils.GetTime(war.Sys.Sunset),
+		SunriseTime: utils.GetTime(war.Sys.Sunrise),
 	}
-}
-
-type Adaper struct{}
-
-var a Adaper
-
-func (a Adaper) getTime(original int64) string {
-	tm := time.Unix(original, 0)
-	return tm.UTC().String()
 }
