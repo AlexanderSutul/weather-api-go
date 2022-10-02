@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"weather-api-go/db"
 	"weather-api-go/models"
 	"weather-api-go/services"
 )
@@ -9,9 +10,10 @@ import (
 func Weather(w http.ResponseWriter, req *http.Request) {
 	queries := req.URL.Query()
 	lat := queries.Get("lat")
-	resp := &models.Response{}
+	resp := &models.ApiResponse{}
+
 	if lat == "" {
-		resp.Error = "lat is not provided as query parameter"
+		resp.Error = "lat is not provided a s query parameter"
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
@@ -23,13 +25,28 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	weatherApiResponse, err := services.WeatherService.GetWeaterExternalApi(lat, lon)
+	weather, err := getWeather(models.Coords{Lat: lat, Lon: lon})
 	if err != nil {
 		resp.Error = err.Error()
 		resp.SendResponse(w, http.StatusInternalServerError)
 		return
 	}
 
-	resp.Data = models.InitWeatherResponse(weatherApiResponse)
+	resp.Data = models.InitWeatherResponse(weather)
 	resp.SendResponse(w, http.StatusOK)
+}
+
+func getWeather(coords models.Coords) (*models.WeatherApiResponse, error) {
+	war, err := db.DatabaseInstance.Fetch(coords)
+	if err != nil {
+		weatherApiResponse, err := services.WeatherService.GetWeaterExternalApi(coords)
+		if err != nil {
+			return nil, err
+		}
+		db.DatabaseInstance.Add(coords, weatherApiResponse)
+		weatherApiResponse.FromCache = false
+		return weatherApiResponse, nil
+	}
+	war.FromCache = true
+	return war, nil
 }

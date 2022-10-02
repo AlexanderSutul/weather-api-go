@@ -2,7 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"time"
+	"weather-api-go/constants"
 )
 
 func ShowUptimeMessage() {
@@ -19,4 +21,20 @@ func ShowUptimeMessage() {
 func GetTime(original int64) string {
 	tm := time.Unix(original, 0)
 	return tm.UTC().String()
+}
+
+func IsInvalidLastUpdate(t string) bool {
+	if t == "" {
+		return true
+	}
+
+	parsedTime, err := time.Parse(constants.TIME_FORMAT, t)
+	if err != nil {
+		log.Println(err)
+		return true
+	}
+
+	now := time.Now()
+
+	return now.Sub(parsedTime).Minutes() > 60
 }

@@ -6,12 +6,12 @@ import (
 	"net/http"
 )
 
-type Response struct {
+type ApiResponse struct {
 	Data  interface{} `json:"data,omitempty"`
 	Error string      `json:"error,omitempty"`
 }
 
-func (resp *Response) SendResponse(w http.ResponseWriter, responseCode int) {
+func (resp *ApiResponse) SendResponse(w http.ResponseWriter, responseCode int) {
 	buffer, err := json.Marshal(resp)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
