@@ -35,13 +35,13 @@ type WeatherResponseCoordinates struct {
 type WeatherResponse struct {
 	Base        string                      `json:"base"`
 	Coordinates *WeatherResponseCoordinates `json:"coordinates"`
-	FeelsLike   float32                     `json:"feels_like"`
+	FeelsLike   float32                     `json:"feelsLike"`
 	Humidity    int                         `json:"humidity"`
 	Temperature float32                     `json:"temperature"`
 	City        string                      `json:"city"`
 	Country     string                      `json:"country"`
-	SunsetTime  string                      `json:"sunset_time"`
-	SunriseTime string                      `json:"sunrise_time"`
+	SunsetTime  string                      `json:"sunsetTime"`
+	SunriseTime string                      `json:"sunriseTime"`
 	FromCache   bool                        `json:"fromCache"`
 }
 
