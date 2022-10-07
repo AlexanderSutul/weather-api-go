@@ -24,7 +24,6 @@ type WeatherApiResponse struct {
 	Main        WeatherApiResponseMain        `json:"main"`
 	Name        string                        `json:"name"`
 	Sys         WeatherApiResponseSys         `json:"sys"`
-	FromCache   bool                          `json:"fromCache"`
 }
 
 type WeatherResponseCoordinates struct {
@@ -42,7 +41,6 @@ type WeatherResponse struct {
 	Country     string                      `json:"country"`
 	SunsetTime  string                      `json:"sunsetTime"`
 	SunriseTime string                      `json:"sunriseTime"`
-	FromCache   bool                        `json:"fromCache"`
 }
 
 func InitWeatherResponse(war *WeatherApiResponse) *WeatherResponse {
@@ -59,6 +57,5 @@ func InitWeatherResponse(war *WeatherApiResponse) *WeatherResponse {
 		Country:     war.Sys.Country,
 		SunsetTime:  utils.GetTime(war.Sys.Sunset),
 		SunriseTime: utils.GetTime(war.Sys.Sunrise),
-		FromCache:   war.FromCache,
 	}
 }

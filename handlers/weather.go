@@ -25,7 +25,7 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	weather, err := getWeather(models.Coords{Lat: lat, Lon: lon})
+	weather, err := getWeather(w, models.Coords{Lat: lat, Lon: lon})
 	if err != nil {
 		resp.Error = err.Error()
 		resp.SendResponse(w, http.StatusInternalServerError)
@@ -36,7 +36,7 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 	resp.SendResponse(w, http.StatusOK)
 }
 
-func getWeather(coords models.Coords) (*models.WeatherApiResponse, error) {
+func getWeather(w http.ResponseWriter, coords models.Coords) (*models.WeatherApiResponse, error) {
 	war, err := db.DatabaseInstance.Fetch(coords)
 	if err != nil {
 		weatherApiResponse, err := services.WeatherService.GetWeaterExternalApi(coords)
@@ -44,9 +44,9 @@ func getWeather(coords models.Coords) (*models.WeatherApiResponse, error) {
 			return nil, err
 		}
 		db.DatabaseInstance.Add(coords, weatherApiResponse)
-		weatherApiResponse.FromCache = false
+		w.Header().Add("Weather-From-Cache", "false")
 		return weatherApiResponse, nil
 	}
-	war.FromCache = true
+	w.Header().Add("Weather-From-Cache", "true")
 	return war, nil
 }
