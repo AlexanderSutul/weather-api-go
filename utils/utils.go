@@ -28,7 +28,7 @@ func IsInvalidLastUpdate(t string) bool {
 		return true
 	}
 
-	parsedTime, err := time.Parse(constants.TIME_FORMAT, t)
+	cacheTime, err := time.Parse(constants.TIME_FORMAT, t)
 	if err != nil {
 		log.Println(err)
 		return true
@@ -36,5 +36,5 @@ func IsInvalidLastUpdate(t string) bool {
 
 	now := time.Now()
 
-	return now.Sub(parsedTime).Minutes() > 60
+	return now.Sub(cacheTime).Minutes() > 60
 }
