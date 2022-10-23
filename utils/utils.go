@@ -27,14 +27,11 @@ func IsInvalidLastUpdate(t string) bool {
 	if t == "" {
 		return true
 	}
-
 	cacheTime, err := time.Parse(constants.TIME_FORMAT, t)
 	if err != nil {
 		log.Println(err)
 		return true
 	}
-
 	now := time.Now()
-
 	return now.Sub(cacheTime).Minutes() > 60
 }

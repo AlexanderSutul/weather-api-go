@@ -9,9 +9,9 @@ import (
 
 func Weather(w http.ResponseWriter, req *http.Request) {
 	queries := req.URL.Query()
-	lat := queries.Get("lat")
 	resp := &models.ApiResponse{}
 
+	lat := queries.Get("lat")
 	if lat == "" {
 		resp.Error = "lat is not provided a s query parameter"
 		resp.SendResponse(w, http.StatusBadRequest)
