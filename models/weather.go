@@ -19,7 +19,6 @@ type WeatherApiResponseSys struct {
 }
 
 type WeatherApiResponse struct {
-	Base        string                        `json:"base"`
 	Coordinates WeatherApiResponseCoordinates `json:"coord"`
 	Main        WeatherApiResponseMain        `json:"main"`
 	Name        string                        `json:"name"`
@@ -32,7 +31,6 @@ type WeatherResponseCoordinates struct {
 }
 
 type WeatherResponse struct {
-	Base        string                      `json:"base"`
 	Coordinates *WeatherResponseCoordinates `json:"coordinates"`
 	FeelsLike   float32                     `json:"feelsLike"`
 	Humidity    int                         `json:"humidity"`
@@ -45,7 +43,6 @@ type WeatherResponse struct {
 
 func InitWeatherResponse(war *WeatherApiResponse) *WeatherResponse {
 	return &WeatherResponse{
-		Base: war.Base,
 		Coordinates: &WeatherResponseCoordinates{
 			Latitude:  war.Coordinates.Latitude,
 			Longitude: war.Coordinates.Longitude,
