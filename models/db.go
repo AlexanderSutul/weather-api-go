@@ -25,7 +25,7 @@ func InitDatabase() *DB {
 }
 
 func (db *DB) Fetch(c Coords) (*WeatherApiResponse, error) {
-	db.printDB()
+	db.printDBValues()
 
 	if w, ok := db.db[c]; ok {
 		fmt.Println("data from database")
@@ -38,7 +38,7 @@ func (db *DB) Add(c Coords, war *WeatherApiResponse) {
 	db.db[c] = Record{War: war, LastUpdate: time.Now().Format(constants.TIME_FORMAT)}
 }
 
-func (db *DB) printDB() {
+func (db *DB) printDBValues() {
 	if len(db.db) > 0 {
 		log.Println("current db state:")
 		for k, v := range db.db {
@@ -49,7 +49,7 @@ func (db *DB) printDB() {
 
 func isLastUpdateValid(t string) bool {
 	if t == "" {
-		return true
+		return false
 	}
 
 	parsedTime, err := time.Parse(constants.TIME_FORMAT, t)
