@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"weather-api-go/constants"
 	"weather-api-go/environment"
 	"weather-api-go/handlers"
 	"weather-api-go/services"
@@ -17,11 +18,11 @@ func main() {
 		panic(err)
 	}
 
-	token := os.Getenv("TOKEN")
+	token := os.Getenv(constants.TOKEN)
 	if token == "" {
 		panic("WEATHER API token is not provided")
 	}
-	port := os.Getenv("PORT")
+	port := os.Getenv(constants.PORT)
 	if port == "" {
 		panic("port is not provided")
 	}
