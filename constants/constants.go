@@ -6,6 +6,6 @@ const (
 	FILE_NAME   = "db"
 	TIME_FORMAT = time.RFC3339
 
-	PORT  = "PORT"
-	TOKEN = "TOKEN"
+	PORT      = "PORT"
+	API_TOKEN = "TOKEN"
 )

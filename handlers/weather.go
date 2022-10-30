@@ -25,7 +25,9 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	weather, err := getWeather(w, models.Coords{Lat: lat, Lon: lon})
+	coords := models.Coords{Lat: lat, Lon: lon}
+
+	weather, err := getWeather(w, coords)
 	if err != nil {
 		resp.Error = err.Error()
 		resp.SendResponse(w, http.StatusInternalServerError)
@@ -39,7 +41,7 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 func getWeather(w http.ResponseWriter, coords models.Coords) (*models.WeatherApiResponse, error) {
 	war, err := db.DatabaseInstance.Fetch(coords)
 	if err != nil {
-		weatherApiResponse, err := services.WeatherService.GetWeaterExternalApi(coords)
+		weatherApiResponse, err := services.WeatherService.GetWeather(coords)
 		if err != nil {
 			return nil, err
 		}

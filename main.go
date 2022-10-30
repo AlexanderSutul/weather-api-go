@@ -18,8 +18,8 @@ func main() {
 		panic(err)
 	}
 
-	token := os.Getenv(constants.TOKEN)
-	if token == "" {
+	apiToken := os.Getenv(constants.API_TOKEN)
+	if apiToken == "" {
 		panic("WEATHER API token is not provided")
 	}
 	port := os.Getenv(constants.PORT)
@@ -29,8 +29,9 @@ func main() {
 
 	go utils.ShowUptimeMessage()
 
-	services.WeatherService.Token = token
+	services.WeatherService.Token = apiToken
 
+	http.HandleFunc("/health", environment.MiddlewareJSON(handlers.Health))
 	http.HandleFunc("/weather", environment.MiddlewareJSON(handlers.Weather))
 
 	fmt.Println("Serve the app")

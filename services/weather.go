@@ -15,7 +15,7 @@ type weatherService struct {
 
 var WeatherService *weatherService = &weatherService{}
 
-func (ws *weatherService) GetWeaterExternalApi(coords models.Coords) (*models.WeatherApiResponse, error) {
+func (ws *weatherService) GetWeather(coords models.Coords) (*models.WeatherApiResponse, error) {
 	url := fmt.Sprintf(
 		utils.API_URL_TEMPLATE,
 		coords.Lat,

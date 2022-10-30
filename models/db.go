@@ -26,12 +26,13 @@ func InitDatabase() *DB {
 
 func (db *DB) Fetch(c Coords) (*WeatherApiResponse, error) {
 	db.printDBValues()
-
-	if w, ok := db.db[c]; ok {
-		fmt.Println("data from database")
-		return w.War, nil
+	w, ok := db.db[c]
+	if !ok {
+		return nil, errors.New(fmt.Errorf("no value with coords %v", c).Error())
 	}
-	return nil, errors.New(fmt.Errorf("no value with coords %v", c).Error())
+
+	fmt.Println("data from database")
+	return w.War, nil
 }
 
 func (db *DB) Add(c Coords, war *WeatherApiResponse) {
@@ -51,13 +52,10 @@ func isLastUpdateValid(t string) bool {
 	if t == "" {
 		return false
 	}
-
 	parsedTime, err := time.Parse(constants.TIME_FORMAT, t)
 	if err != nil {
 		return true
 	}
-
 	now := time.Now()
-
 	return now.Sub(parsedTime).Milliseconds() > 0
 }
