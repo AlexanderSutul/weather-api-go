@@ -47,15 +47,3 @@ func (db *DB) printDBValues() {
 		}
 	}
 }
-
-func isLastUpdateValid(t string) bool {
-	if t == "" {
-		return false
-	}
-	parsedTime, err := time.Parse(constants.TIME_FORMAT, t)
-	if err != nil {
-		return true
-	}
-	now := time.Now()
-	return now.Sub(parsedTime).Milliseconds() > 0
-}

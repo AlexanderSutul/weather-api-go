@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"weather-api-go/constants"
 	"weather-api-go/db"
 	"weather-api-go/models"
 	"weather-api-go/services"
+	"weather-api-go/utils"
 )
 
 func Weather(w http.ResponseWriter, req *http.Request) {
@@ -13,21 +15,31 @@ func Weather(w http.ResponseWriter, req *http.Request) {
 
 	lat := queries.Get("lat")
 	if lat == "" {
-		resp.Error = "lat is not provided a s query parameter"
+		resp.Error = "lat is not provided as a query parameter"
+		resp.SendResponse(w, http.StatusBadRequest)
+		return
+	}
+
+	if !utils.IsNumber(lat) {
+		resp.Error = "lat has to be a number"
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
 	lon := queries.Get("lon")
 	if lon == "" {
-		resp.Error = "lon is not provided as query parameter"
+		resp.Error = "lon is not provided as a query parameter"
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
-	coords := models.Coords{Lat: lat, Lon: lon}
+	if !utils.IsNumber(lon) {
+		resp.Error = "lon has to be a number"
+		resp.SendResponse(w, http.StatusBadRequest)
+		return
+	}
 
-	weather, err := getWeather(w, coords)
+	weather, err := getWeather(w, models.Coords{Lat: lat, Lon: lon})
 	if err != nil {
 		resp.Error = err.Error()
 		resp.SendResponse(w, http.StatusInternalServerError)
@@ -46,9 +58,9 @@ func getWeather(w http.ResponseWriter, coords models.Coords) (*models.WeatherApi
 			return nil, err
 		}
 		db.DatabaseInstance.Add(coords, weatherApiResponse)
-		w.Header().Add("Weather-From-Cache", "false")
+		w.Header().Add(constants.WEATHER_HEADER, "false")
 		return weatherApiResponse, nil
 	}
-	w.Header().Add("Weather-From-Cache", "true")
+	w.Header().Add(constants.WEATHER_HEADER, "true")
 	return war, nil
 }

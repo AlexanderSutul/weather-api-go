@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 	"weather-api-go/constants"
 )
@@ -32,4 +33,11 @@ func IsInvalidLastUpdate(t string) bool {
 	}
 	now := time.Now()
 	return now.Sub(cacheTime).Minutes() > 60
+}
+
+func IsNumber(s string) bool {
+	if _, err := strconv.Atoi(s); err != nil {
+		return false
+	}
+	return true
 }
