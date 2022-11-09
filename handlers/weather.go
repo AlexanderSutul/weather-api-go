@@ -9,32 +9,40 @@ import (
 	"weather-api-go/utils"
 )
 
+const (
+	ErrLatIsNotProvided = "lat is not provided as a query parameter"
+	ErrLatIsNotNumber   = "lat has to be a number"
+
+	ErrLonIsNotProvided = "lon is not provided as a query parameter"
+	ErrLonIsNotNumber   = "lon has to be a number"
+)
+
 func Weather(w http.ResponseWriter, req *http.Request) {
 	queries := req.URL.Query()
 	resp := &models.ApiResponse{}
 
 	lat := queries.Get("lat")
 	if lat == "" {
-		resp.Error = "lat is not provided as a query parameter"
+		resp.Error = ErrLatIsNotProvided
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
 	if !utils.IsNumber(lat) {
-		resp.Error = "lat has to be a number"
+		resp.Error = ErrLatIsNotNumber
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
 	lon := queries.Get("lon")
 	if lon == "" {
-		resp.Error = "lon is not provided as a query parameter"
+		resp.Error = ErrLonIsNotProvided
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
 
 	if !utils.IsNumber(lon) {
-		resp.Error = "lon has to be a number"
+		resp.Error = ErrLonIsNotNumber
 		resp.SendResponse(w, http.StatusBadRequest)
 		return
 	}
